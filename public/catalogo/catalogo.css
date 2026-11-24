@@ -1,0 +1,118 @@
+.catalogo { padding-top: 36px; }
+
+.catalogo-topo {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding-bottom: 18px; margin-bottom: 36px;
+  border-bottom: 1px solid var(--linha);
+}
+.catalogo-topo h2 {
+  font: 400 clamp(28px, 3vw, 40px)/1 var(--serif);
+  font-variation-settings: 'SOFT' 50, 'opsz' 72;
+  letter-spacing: -.025em;
+}
+.catalogo-contagem { font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--texto-3); }
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+  gap: 48px clamp(20px, 2.4vw, 32px);
+}
+
+/* ---------- Cartão ---------- */
+.livro {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 0; border: 0; background: none; text-align: left;
+  animation: subir .7s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.livro:focus-visible { outline: none; }
+
+.livro-moldura {
+  position: relative;
+  perspective: 900px;
+}
+/* sombra no "chão" */
+.livro-moldura::after {
+  content: '';
+  position: absolute; left: 8%; right: 8%; bottom: -14px; height: 22px; z-index: -1;
+  background: radial-gradient(closest-side, rgb(0 0 0 / .65), transparent);
+  filter: blur(4px);
+  transition: transform .5s var(--ease), opacity .5s;
+}
+
+.livro .capa {
+  transform-origin: 0 50%;
+  box-shadow: 0 1px 0 rgb(255 255 255 / .04) inset, 0 14px 30px -18px rgb(0 0 0 / .8);
+  transition: transform .55s var(--ease), box-shadow .55s var(--ease);
+}
+
+.livro:hover .capa,
+.livro:focus-visible .capa {
+  transform: translateY(-8px) rotateY(-16deg);
+  box-shadow: 18px 22px 40px -18px rgb(0 0 0 / .85);
+}
+.livro:hover .livro-moldura::after { transform: translateX(10px) scaleX(.9); opacity: .7; }
+.livro:focus-visible .capa { outline: 2px solid var(--tinta); outline-offset: 5px; }
+
+.livro-info { display: grid; gap: 4px; }
+.livro-titulo {
+  font: 500 18px/1.15 var(--serif);
+  font-variation-settings: 'SOFT' 40, 'opsz' 36;
+  letter-spacing: -.012em;
+  color: var(--texto);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  transition: color .2s;
+}
+.livro:hover .livro-titulo { color: var(--tinta-clara); }
+.livro-autor { font-size: 14px; color: var(--texto-2); }
+.livro-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+  font: 500 10.5px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--texto-3);
+}
+.livro-meta i { font-style: normal; opacity: .6; }
+
+/* recém-cadastrado */
+.livro--novo .capa { animation: novo 2.4s var(--ease) .3s 2; }
+.livro--novo .livro-titulo::before {
+  content: 'Novo'; display: inline-block; margin-right: 8px; padding: 3px 7px; vertical-align: 3px;
+  border-radius: 999px; background: var(--tinta); color: var(--fundo);
+  font: 600 9.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+}
+@keyframes novo {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(242 85 44 / 0), 0 14px 30px -18px rgb(0 0 0 / .8); }
+  40% { box-shadow: 0 0 0 6px rgb(242 85 44 / .45), 0 14px 30px -18px rgb(0 0 0 / .8); }
+}
+
+/* esqueleto */
+.livro--esqueleto { pointer-events: none; }
+.livro--esqueleto .livro-info span {
+  display: block; height: 12px; border-radius: 6px;
+  background: linear-gradient(100deg, var(--superficie) 30%, var(--superficie-2) 50%, var(--superficie) 70%) 0 0 / 300% 100%;
+  animation: brilho-capa 1.4s linear infinite;
+}
+.livro--esqueleto .livro-info span:nth-child(1) { width: 85%; height: 16px; }
+.livro--esqueleto .livro-info span:nth-child(2) { width: 60%; }
+.livro--esqueleto .livro-info span:nth-child(3) { width: 40%; height: 9px; }
+
+/* ---------- Estados vazios ---------- */
+.vazio {
+  grid-column: 1 / -1;
+  display: grid; justify-items: center; gap: 10px; text-align: center;
+  padding: 72px 24px;
+  border: 1px dashed var(--linha-forte); border-radius: 20px;
+  animation: subir .6s var(--ease) both;
+}
+.vazio-icone {
+  display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 8px;
+  border-radius: 16px; background: var(--superficie-2); color: var(--tinta);
+}
+.vazio-icone svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vazio h3 { font: 400 26px/1.1 var(--serif); letter-spacing: -.02em; }
+.vazio p { max-width: 44ch; color: var(--texto-2); }
+.vazio .btn { margin-top: 14px; }
+
+@media (max-width: 560px) {
+  .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 16px; }
+  .livro-titulo { font-size: 16px; }
+  .livro-autor { font-size: 13px; }
+}
